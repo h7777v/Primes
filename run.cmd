@@ -1,0 +1,1 @@
+clang ./src/main.c -O3 -march=native -flto -fuse-ld=lld -o code.exe
