@@ -1,0 +1,1 @@
+clang ./src/benchmark.c -O3 -march=native -flto -fuse-ld=lld -o bench.exe
