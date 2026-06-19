@@ -66,6 +66,7 @@ bool isPrime(unsigned long long n){
     unsigned long long ubound = isqrt(n);
 
     for (unsigned long long i = 3;i <= ubound;i+=2){
+        if (i % 3 == 0) continue;
         if (n % i == 0){
             return false;
         }
