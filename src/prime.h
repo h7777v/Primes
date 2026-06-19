@@ -27,65 +27,25 @@ inline unsigned int modexp(unsigned int a, unsigned int e, unsigned int mod) {
     return result;
 }
 
-unsigned int gcd(unsigned int a, unsigned int b) {
-    while (b != 0) {
-        unsigned int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
+bool miller_rabin(unsigned int n, unsigned int a) {
+    unsigned int s = __builtin_ctz(n - 1);
+    unsigned int d = (n - 1) >> s;
 
-int jacobi(unsigned int a, unsigned int n) {
-    if (n == 0 || (n & 1) == 0)
-        return 0;
+    unsigned int x = modexp(a, d, n);
 
-    int t = 1;
-    unsigned int m = n;
+    if (x == 1 || x == n - 1) return true;
 
-    a %= m;
+    for (unsigned int r = 1; r < s; r++){
+        x = (unsigned long long)x * x % n;
 
-    while (a != 0) {
-        while ((a & 1) == 0) {
-            a >>= 1;
-            unsigned int r = m % 8;
-            if (r == 3 || r == 5)
-                t = -t;
-        }
+        if (x == n - 1)
+            return true;
 
-        unsigned int tmp = a;
-        a = m;
-        m = tmp;
-
-        if ((a % 4 == 3) && (m % 4 == 3))
-            t = -t;
-
-        a %= m;
+        if (x == 1)
+            return false;
     }
 
-    return (m == 1) ? t : 0;
-}
-
-int solovay_strassen(unsigned int n, unsigned int a) {
-    if (n < 2) return 0;
-    if (n == 2 || n == 3) return 1;
-    if ((n & 1) == 0) return 0;
-
-    if (a < 2 || a >= n - 1)
-        return 0;
-
-    if (gcd(a, n) > 1)
-        return 0;
-
-    unsigned int exp = (n - 1) >> 1;
-
-    unsigned int x = modexp(a, exp, n);
-
-    int j = jacobi(a, n);
-
-    unsigned int j_mod = (j == -1) ? n - 1 : (unsigned int)j;
-
-    return x == j_mod;
+    return false;
 }
 
 bool isPrime(unsigned long long n){
@@ -99,11 +59,7 @@ bool isPrime(unsigned long long n){
     uint8_t b[5] = {2, 3, 5, 7, 11};
     if (n >= 500000 && n <= 4294967295){
         for (uint8_t  i = 0; i < 5; i++){
-            if (!solovay_strassen(n, b[i])) return false;
-        }
-    } else if (n >= 100000 && n <= 4294967295){
-        for (uint8_t  i = 0; i < 3; i++){
-            if (!solovay_strassen(n, b[i])) return false;
+            if (!miller_rabin(n, b[i])) return false;
         }
     }
 

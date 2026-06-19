@@ -1,46 +1,46 @@
 N primes: 10000000
 /-----TEST 1-----/
 Result: 179424673
-Time taken: 69.539079 seconds
+Time taken: 68.891938 seconds
 /----------------/
 /-----TEST 2-----/
 Result: 179424673
-Time taken: 69.194579 seconds
+Time taken: 68.914354 seconds
 /----------------/
 /-----TEST 3-----/
 Result: 179424673
-Time taken: 69.721527 seconds
+Time taken: 69.336485 seconds
 /----------------/
 /-----TEST 4-----/
 Result: 179424673
-Time taken: 69.771530 seconds
+Time taken: 69.164676 seconds
 /----------------/
 /-----TEST 5-----/
 Result: 179424673
-Time taken: 69.885952 seconds
+Time taken: 69.693183 seconds
 /----------------/
 /-----TEST 6-----/
 Result: 179424673
-Time taken: 69.841027 seconds
+Time taken: 69.010534 seconds
 /----------------/
 /-----TEST 7-----/
 Result: 179424673
-Time taken: 69.579774 seconds
+Time taken: 69.063423 seconds
 /----------------/
 /-----TEST 8-----/
 Result: 179424673
-Time taken: 69.766996 seconds
+Time taken: 69.055591 seconds
 /----------------/
 /-----TEST 9-----/
 Result: 179424673
-Time taken: 71.076908 seconds
+Time taken: 70.089869 seconds
 /----------------/
 /-----TEST 10-----/
 Result: 179424673
-Time taken: 70.966746 seconds
+Time taken: 69.623854 seconds
 /-----------------/
 /----------------/
-Mean: 69.934412 seconds
+Mean: 69.284391 seconds
 /----------------/
 
 
@@ -48,46 +48,46 @@ Mean: 69.934412 seconds
 N primes: 1000000
 /-----TEST 1-----/
 Result: 15485863
-Time taken: 2.685072 seconds
+Time taken: 2.691873 seconds
 /----------------/
 /-----TEST 2-----/
 Result: 15485863
-Time taken: 2.680065 seconds
+Time taken: 2.738762 seconds
 /----------------/
 /-----TEST 3-----/
 Result: 15485863
-Time taken: 2.670698 seconds
+Time taken: 2.583135 seconds
 /----------------/
 /-----TEST 4-----/
 Result: 15485863
-Time taken: 2.687032 seconds
+Time taken: 2.583160 seconds
 /----------------/
 /-----TEST 5-----/
 Result: 15485863
-Time taken: 2.702890 seconds
+Time taken: 2.742834 seconds
 /----------------/
 /-----TEST 6-----/
 Result: 15485863
-Time taken: 2.688262 seconds
+Time taken: 2.645884 seconds
 /----------------/
 /-----TEST 7-----/
 Result: 15485863
-Time taken: 2.682928 seconds
+Time taken: 2.705473 seconds
 /----------------/
 /-----TEST 8-----/
 Result: 15485863
-Time taken: 2.680968 seconds
+Time taken: 2.663958 seconds
 /----------------/
 /-----TEST 9-----/
 Result: 15485863
-Time taken: 2.689133 seconds
+Time taken: 2.724025 seconds
 /----------------/
 /-----TEST 10-----/
 Result: 15485863
-Time taken: 2.681997 seconds
+Time taken: 2.581475 seconds
 /-----------------/
 /----------------/
-Mean: 2.684905 seconds
+Mean: 2.666058 seconds
 /----------------/
 
 
@@ -95,44 +95,44 @@ Mean: 2.684905 seconds
 N primes: 10000
 /-----TEST 1-----/
 Result: 104729
-Time taken: 0.002569 seconds
+Time taken: 0.002273 seconds
 /----------------/
 /-----TEST 2-----/
 Result: 104729
-Time taken: 0.002379 seconds
+Time taken: 0.002193 seconds
 /----------------/
 /-----TEST 3-----/
 Result: 104729
-Time taken: 0.002766 seconds
+Time taken: 0.002288 seconds
 /----------------/
 /-----TEST 4-----/
 Result: 104729
-Time taken: 0.002574 seconds
+Time taken: 0.002198 seconds
 /----------------/
 /-----TEST 5-----/
 Result: 104729
-Time taken: 0.002640 seconds
+Time taken: 0.002249 seconds
 /----------------/
 /-----TEST 6-----/
 Result: 104729
-Time taken: 0.002366 seconds
+Time taken: 0.002191 seconds
 /----------------/
 /-----TEST 7-----/
 Result: 104729
-Time taken: 0.002417 seconds
+Time taken: 0.002193 seconds
 /----------------/
 /-----TEST 8-----/
 Result: 104729
-Time taken: 0.002528 seconds
+Time taken: 0.002280 seconds
 /----------------/
 /-----TEST 9-----/
 Result: 104729
-Time taken: 0.002719 seconds
+Time taken: 0.002243 seconds
 /----------------/
 /-----TEST 10-----/
 Result: 104729
-Time taken: 0.002628 seconds
+Time taken: 0.002346 seconds
 /-----------------/
 /----------------/
-Mean: 0.002559 seconds
+Mean: 0.002246 seconds
 /----------------/
