@@ -56,23 +56,25 @@ bool isPrime(unsigned long long n){
     if (n == 3 || n == 5 || n == 7 || n == 11 || n == 13 || n == 17 || n == 19) return true;
     if (n % 3 == 0 || n % 5 == 0 || n % 7 == 0 || n % 11 == 0 || n % 13 == 0 || n % 17 == 0 || n % 19 == 0) return false;
 
-    uint8_t b[5] = {2, 3, 5, 7, 11};
+    uint8_t b[5] = {2, 7, 61};
     if (n >= 500000 && n <= 4294967295){
-        for (uint8_t  i = 0; i < 5; i++){
+        for (uint8_t  i = 0; i < 3; i++){
             if (!miller_rabin(n, b[i])) return false;
         }
-    }
 
-    unsigned long long ubound = isqrt(n);
+        return true;
+    } else {
+        unsigned long long ubound = isqrt(n);
 
-    for (unsigned long long i = 3;i <= ubound;i+=2){
-        if (i % 3 == 0) continue;
-        if (n % i == 0){
-            return false;
+        for (unsigned long long i = 3;i <= ubound;i+=2){
+            if (i % 3 == 0) continue;
+            if (n % i == 0){
+                return false;
+            }
         }
-    }
 
-    return true;
+        return true;
+    }
 }
 
 unsigned long long getPrime(unsigned long long n){
