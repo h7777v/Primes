@@ -3,91 +3,52 @@
 #include <intrin.h>
 #include <math.h>
 
-inline unsigned long long isqrt(unsigned long long x) {
-    if (x == 0) return 0;
+unsigned long long get_prime_array_bound(unsigned long long n) {
+    if (n < 2) return 0;
 
-    unsigned long long r = (unsigned long long)sqrt((double)x);
+    unsigned long long A = 64 - __builtin_clzll(n);
+    unsigned long long B = 64 - __builtin_clzll(A);
 
-    if ((r + 1) <= x / (r + 1)) ++r;
-    if (r > x / r) --r;
-
-    return r;
+    return (A + B) * n;
 }
 
-inline unsigned int modexp(unsigned int a, unsigned int e, unsigned int mod) {
-    unsigned int result = 1;
-    a %= mod;
-    while (e > 0) {
-        if (e & 1) {
-            result = ((unsigned long long)result * a) % mod;
-        }
-        a = ((unsigned long long)a * a) % mod;
-        e >>= 1;
-    }
-    return result;
-}
-
-bool miller_rabin(unsigned int n, unsigned int a) {
-    unsigned int s = __builtin_ctz(n - 1);
-    unsigned int d = (n - 1) >> s;
-
-    unsigned int x = modexp(a, d, n);
-
-    if (x == 1 || x == n - 1) return true;
-
-    for (unsigned int r = 1; r < s; r++){
-        x = (unsigned long long)x * x % n;
-
-        if (x == n - 1)
-            return true;
-
-        if (x == 1)
-            return false;
-    }
-
-    return false;
-}
-
-bool isPrime(unsigned long long n){
-    if (n < 2) return false;
-    if (n == 2) return true;
-    if ((n & 1) == 0) return false;
-
-    if (n == 3 || n == 5 || n == 7 || n == 11 || n == 13 || n == 17 || n == 19) return true;
-    if (n % 3 == 0 || n % 5 == 0 || n % 7 == 0 || n % 11 == 0 || n % 13 == 0 || n % 17 == 0 || n % 19 == 0) return false;
-
-    uint8_t b[5] = {2, 7, 61};
-    if (n >= 500000 && n <= 4294967295){
-        for (uint8_t  i = 0; i < 3; i++){
-            if (!miller_rabin(n, b[i])) return false;
-        }
-
-        return true;
-    } else {
-        unsigned long long ubound = isqrt(n);
-
-        for (unsigned long long i = 3;i <= ubound;i+=2){
-            if (i % 3 == 0) continue;
-            if (n % i == 0){
-                return false;
-            }
-        }
-
-        return true;
-    }
+inline unsigned long long get_number(size_t i){
+    return 2 * (i + 2) - 1;
 }
 
 unsigned long long getPrime(unsigned long long n){
-    unsigned long long i = 1;
-    unsigned long long c = 2;
+    if (n == 0) return 1;
+    if (n == 1) return 2;
 
-    while (i <= n){
-        if (isPrime(c)){
-            i++;
-        }
+    unsigned long long c = 1;
+
+    unsigned long long size = (get_prime_array_bound(n) >> 1) + 1;
+
+    bool *list;
+
+    list = (bool *)calloc(size, 1);
+
+    if (list == NULL) return 1;
+
+    for(size_t i = 0;i < size;i++){
+        if (list[i]) continue;
+
         c++;
-    }
-    c--;
 
-    return c;
+        if (c == n){
+            return get_number(i);
+        }
+
+        size_t p = 2 * i + 3;
+
+        size_t start = (p * p - 3) / 2;
+
+        for (size_t j = start; j < size; j += p) {
+            list[j] = true;
+        }
+    }
+
+    free(list);
+
+    return 1;
 }
