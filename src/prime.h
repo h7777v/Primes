@@ -3,6 +3,17 @@
 #include <intrin.h>
 #include <math.h>
 
+inline unsigned long long isqrt(unsigned long long x) {
+    if (x == 0) return 0;
+
+    unsigned long long r = (unsigned long long)sqrt((double)x);
+
+    if (r * r > x) r--;
+    if (x - (r * r) >= (r * 2) + 1) r++;
+
+    return r;
+}
+
 unsigned long long get_prime_array_bound(unsigned long long n) {
     if (n < 2) return 0;
 
@@ -16,11 +27,11 @@ inline unsigned long long get_number(size_t i){
     return 2 * (i + 2) - 1;
 }
 
-static inline bool read(size_t i, uint8_t *list) {
+static inline bool read(size_t i, uint8_t *restrict list) {
     return (list[i >> 3] >> (i & 7)) & 1;
 }
 
-static inline void set(size_t i, uint8_t *list) {
+static inline void set(size_t i, uint8_t *restrict list) {
     list[i >> 3] |= (1u << (i & 7));
 }
 
@@ -31,6 +42,8 @@ unsigned long long getPrime(unsigned long long n){
     unsigned long long c = 1;
 
     unsigned long long size = (get_prime_array_bound(n) >> 1) + 1;
+
+    unsigned int ubound = isqrt(size);
 
     uint8_t *list;
 
@@ -47,6 +60,8 @@ unsigned long long getPrime(unsigned long long n){
             free(list);
             return get_number(i);
         }
+
+        if (i > ubound) continue;
 
         size_t p = 2 * i + 3;
 
