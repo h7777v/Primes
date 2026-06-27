@@ -1,7 +1,14 @@
 #include <stdbool.h>
+#include <string.h>
 #include <stdint.h>
 #include <intrin.h>
 #include <math.h>
+
+//Your L1d cache size here:
+#define CACHE_SIZE 48000
+
+#define SEGM_SIZE (CACHE_SIZE * 2 / 3)
+
 
 inline unsigned long long isqrt(unsigned long long x) {
     if (x == 0) return 0;
@@ -24,7 +31,7 @@ unsigned long long get_prime_array_bound(unsigned long long n) {
 }
 
 inline unsigned long long get_number(size_t i){
-    return 2 * (i + 2) - 1;
+    return 2 * i + 3;
 }
 
 static inline bool read(size_t i, uint8_t *restrict list) {
@@ -41,76 +48,69 @@ unsigned long long getPrime(unsigned long long n){
 
     unsigned long long c = 1;
 
-    unsigned long long size = (get_prime_array_bound(n) >> 1) + 1;
+    unsigned long long size = get_prime_array_bound(n) >> 1;
 
-    unsigned int ubound = isqrt(size);
+    unsigned int ubound = isqrt(size << 1);
 
-    uint8_t *list;
+    uint8_t *segment;
+    size_t *primes;
+    size_t len = 0;
 
-    list = (uint8_t *)calloc(size >> 3, 1);
+    segment = (uint8_t *)calloc(SEGM_SIZE, 1);
+    primes = (unsigned long long *)calloc(ubound >> 1, sizeof(unsigned long long));
 
-    if (list == NULL) return 1;
+    if (segment == NULL) return 1;
+    if (primes == NULL) return 1;
+    
+    for(size_t s = 0; s < (size >> 3) / SEGM_SIZE + 1; s++){
+        if (s > 0) {
+            memset(segment, 0, SEGM_SIZE);
+            for (size_t i = 0; i < len; i++) {
+                size_t p = primes[i];
 
-    for(size_t i = 0;i < ubound;i++){
-        if (read(i, list)) continue;
+                if (p >= 4294967296) continue;
 
-        c++;
+                size_t start = (p * p - 3) / 2;
 
-        if (c == n){
-            free(list);
-            return get_number(i);
-        }
+                size_t t = s * (SEGM_SIZE << 3);
 
-        size_t p = 2 * i + 3;
+                while (start < t) start += p;
 
-        size_t start = (p * p - 3) / 2;
-
-        for (size_t j = start; j < size; j += p) {
-            set(j, list);
-        }
-    }
-
-    size_t byte = ubound >> 3;
-    size_t bit  = ubound & 7;
-
-    for (; bit < 8; bit++) {
-        if (!(list[byte] & (1u << bit))) {
-            c++;
-
-            if (c == n) {
-                size_t idx = (byte << 3) + bit;
-                free(list);
-                return 2 * idx + 3;
-            }
-        }
-    }
-
-    for (size_t i = byte + 1; i < ((size + 7) >> 3); i++) {
-        unsigned primes_in_byte = 8 - __builtin_popcount(list[i]);
-
-        if (c + primes_in_byte < n) {
-            c += primes_in_byte;
-            continue;
-        }
-
-        for (unsigned b = 0; b < 8; b++) {
-            size_t idx = (i << 3) + b;
-
-            if (idx >= size)
-                break;
-
-            if (!(list[i] & (1u << b))) {
-                c++;
-
-                if (c == n) {
-                    free(list);
-                    return 2 * idx + 3;
+                for (size_t j = start - t; j < SEGM_SIZE << 3; j += p) {
+                    set(j, segment);
                 }
             }
         }
-    }
 
-    free(list);
+        for(size_t i = 0; i < SEGM_SIZE << 3; i++){
+            if (read(i, segment)) continue;
+
+            c++;
+
+            size_t t = s * (SEGM_SIZE << 3);
+
+            if (c == n){
+                free(segment);
+                free(primes);
+                return get_number(i + t);
+            }
+
+            size_t p = get_number(i + t);
+
+            if (p > ubound) continue;
+
+            if (p >= 4294967296) continue;
+
+            size_t start = (p * p - 3) / 2;
+
+            primes[len] = p;
+            len++;
+
+            for (size_t j = start - t; j < SEGM_SIZE << 3; j += p) {
+                set(j, segment);
+            }
+        }
+    }
 
     return 1;
 }
