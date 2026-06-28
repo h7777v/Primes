@@ -54,13 +54,16 @@ unsigned long long getPrime(unsigned long long n){
 
     uint8_t *segment;
     size_t *primes;
+    size_t *next;
     size_t len = 0;
 
     segment = (uint8_t *)calloc(SEGM_SIZE, 1);
     primes = (unsigned long long *)calloc(ubound >> 1, sizeof(unsigned long long));
+    next = (unsigned long long *)calloc(ubound >> 1, sizeof(unsigned long long));
 
     if (segment == NULL) return 1;
     if (primes == NULL) return 1;
+    if (next == NULL) return 1;
     
     for(size_t s = 0; s < (size >> 3) / SEGM_SIZE + 1; s++){
         if (s > 0) {
@@ -70,15 +73,16 @@ unsigned long long getPrime(unsigned long long n){
 
                 if (p >= 4294967296) continue;
 
-                size_t start = (p * p - 3) / 2;
+                size_t start = next[i];
 
                 size_t t = s * (SEGM_SIZE << 3);
 
-                while (start < t) start += p;
-
-                for (size_t j = start - t; j < SEGM_SIZE << 3; j += p) {
+                size_t j = start - t;
+                while (j < SEGM_SIZE << 3) {
                     set(j, segment);
+                    j += p;
                 }
+                next[i] = j + t;
             }
         }
 
@@ -92,6 +96,7 @@ unsigned long long getPrime(unsigned long long n){
             if (c == n){
                 free(segment);
                 free(primes);
+                free(next);
                 return get_number(i + t);
             }
 
@@ -103,14 +108,21 @@ unsigned long long getPrime(unsigned long long n){
 
             size_t start = (p * p - 3) / 2;
 
-            primes[len] = p;
-            len++;
-
-            for (size_t j = start - t; j < SEGM_SIZE << 3; j += p) {
+            size_t j = start - t;
+            while (j < SEGM_SIZE << 3) {
                 set(j, segment);
+                j += p;
             }
+
+            primes[len] = p;
+            next[len] = j + t;
+            len++;
         }
     }
+
+    free(segment);
+    free(primes);
+    free(next);
 
     return 1;
 }
